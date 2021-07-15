@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/EyeTDisplay/Desktop/Driving_Experiment/JInputJoystickTestV2/jinput/jinput.jar"/>
+	<classpathentry kind="lib" path="jinput/jinput.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

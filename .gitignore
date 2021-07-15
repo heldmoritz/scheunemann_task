@@ -4,4 +4,4 @@ bin/
 .svn/
 src/src/doc
 rehearsal/*.py
-
+**jinput**

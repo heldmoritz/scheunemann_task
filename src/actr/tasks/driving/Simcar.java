@@ -155,15 +155,18 @@ public class Simcar extends Vehicle {
 				car_speed = 0;
 		}
 		//npk - locate steering wheel
-		Controls controls = new Controls();
+		//Controls controls = new Controls();
 
 		//npk - get steer axis & accel/brake values
-		List<Double> controlValues = controls.getControls();
+		//List<Double> controlValues = controls.getControls();
 
 		//npk - set steer axis & accel/brake values
-		car_steer = controlValues.get(STEER);
-		car_accel_pedal = controlValues.get(ACCEL);
-		car_brake_pedal = controlValues.get(BRAKE);
+		//car_steer = controlValues.get(STEER);
+		//car_accel_pedal = controlValues.get(ACCEL);
+		//car_brake_pedal = controlValues.get(BRAKE);
+		car_steer = 0;
+		car_accel_pedal = 0.5;
+		car_brake_pedal = 0;
 
 		steerAngle = car_steer;
 		accelerator = car_accel_pedal;
@@ -359,8 +362,9 @@ public class Simcar extends Vehicle {
 		g.fillRect(rect_x_2, rect_y_2, rect_width_2, rect_height_2);
 
 		//npk blinkers
-        Controls controls = new Controls();
-        int blinkers = controls.blinkers();
+        //Controls controls = new Controls();
+        //int blinkers = controls.blinkers();
+		int blinkers = 2;
  
         int RIGHT = 1;
         int LEFT = 2;

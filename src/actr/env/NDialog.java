@@ -67,20 +67,17 @@ public class NDialog extends JDialog{
     //npk
     public void closeDialog() {
         //instantiate controls
-        Controls controls = new Controls();
+        //Controls controls = new Controls();
 
-        try {
-            // wait half a second incase the button press was too long
+        
+        //stay in loop until the button is pressed
+        //while(!controls.buttonXpressed()){}
+        try{
             Thread.sleep(500);
-        } catch (InterruptedException e) {
+
+        }catch(InterruptedException e){
             e.printStackTrace();
         }
-
-        //stay in loop until the button is pressed
-        while(!controls.buttonXpressed()){
-            
-        }
-        //close dialog box
         dispose();
     }
 }

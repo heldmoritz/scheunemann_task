@@ -7,11 +7,13 @@ import java.net.URL;
 import javax.swing.*;
 
 import actr.model.Model;
+import actr.model.Utilities;
 import actr.task.*;
 import actr.tasks.driving.*;
 import networking.ServerMain;
 
 import actr.env.NDialog;
+
 
 /**
  * The class that defines a graphical frame (window) for editing and running an
@@ -407,13 +409,12 @@ public class Frame extends JFrame {
 					// Perform 1 practice trial, 2-back task, only 5 speed-signs.
 					String title_message = "Practice trial";
 					String content_message = "In this practice trial, you will perform a 2-back task.";
-//					 new NDialog(frame, content_message, title_message, new Dimension(200, 100));
-//					model = Model.compile(modelText, frame);
-//					showTask(model.getTask());
-//					model.setParameter(":real-time", "1");
-//					model.run(false, 2, true, -1);
-//					  model.getTask().finish();
-					ServerMain.participant.prepareExperiment();
+					 new NDialog(frame, content_message, title_message, new Dimension(200, 100));
+					model = Model.compile(modelText, frame);
+					showTask(model.getTask());
+					model.setParameter(":real-time", "1");
+					model.run(false, 2, true, -1);
+					model.getTask().finish();
 					// This loop runs 10 recorded iterations of the driving-simulation.
 					for (int i = 0; !stop && i < trials.getList().size(); i++) {
 						if(i == 10)
@@ -424,28 +425,21 @@ public class Frame extends JFrame {
 						}
 						boolean construction = trials.getList().get(i).construction;
 						int nBack = trials.getList().get(i).nBack;
-						ServerMain.participant.prepareTrial(i+1, construction, nBack);
-						if (i != 0) {
-							ServerMain.participant.doDriftCorrection();
-						}
-						ServerMain.participant.startRecording();
+
 						title_message = "Trial " + (i+1) + " - Progress: " + Math.round((i) * 100.0 / trials.getList().size()) + "% / 100%";
 						content_message = "In the next trial, you will perform a " + nBack + "-back task.";
 						new NDialog(frame, content_message, title_message, new Dimension(200, 100));
 						model = Model.compile(modelText, frame);
 						showTask(model.getTask());
 						model.setParameter(":real-time", "1");
-						ServerMain.participant.setStartTime(System.currentTimeMillis());
 						model.run(construction, nBack, false, i);
 						model.getTask().finish();
-						ServerMain.participant.endTrial();
 					}
 					// model = null;
 					hideTask();
 					title_message = "End";
 					content_message = "This is the end of the experiment, thanks for participating!";
 					new NDialog(frame, content_message, title_message, new Dimension(200, 100));
-					ServerMain.participant.endExperiment();
 				}
 				core.releaseLock(frame);
 				update();

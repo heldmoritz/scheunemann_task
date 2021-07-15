@@ -49,7 +49,7 @@ public class Construction extends Road {
             }
             if (env.simcar.fracIndex > start_con && start_con != 0) {
                 if (!construction_bool) {
-                    ServerMain.participant.sendConstructionStart();
+                    //ServerMain.participant.sendConstructionStart();
                 }
                 construction_bool = true;
             }
@@ -71,7 +71,7 @@ public class Construction extends Road {
     
             if (env.simcar.fracIndex > stop_con && start_con != 0) {
                 if (construction_bool) {
-                    ServerMain.participant.sendConstructionStop();
+                    //ServerMain.participant.sendConstructionStop();
                 }
                 construction_bool = false;
                 construction_vis = false;

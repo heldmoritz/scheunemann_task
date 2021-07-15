@@ -1,5 +1,7 @@
 package actr.tasks.driving;
 import actr.env.Condition;
+import actr.env.Frame;
+
 import java.awt.BorderLayout;
 // import java.io.BufferedWriter;
 // import java.io.FileWriter;
@@ -14,6 +16,7 @@ import javax.swing.JLabel;
 import actr.model.Model;
 import actr.task.Result;
 import actr.task.Task;
+import actr.env.Frame;
 
 /**
  * The main Driving task class that sets up the simulation and starts periodic
@@ -23,6 +26,8 @@ import actr.task.Task;
  */
 public class Driving extends actr.task.Task {
 	static Simulator simulator = null;
+	Frame frame;
+	
 
 	Simulation simulation;
 	JLabel nearLabel, farLabel, signLabel, carLabel, speedoLabel, leftmirrorLabel, rightmirrorLabel, leftLaneLabel,

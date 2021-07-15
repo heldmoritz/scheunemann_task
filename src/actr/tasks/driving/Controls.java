@@ -128,7 +128,7 @@ public class Controls {
             }
         }
 
-        return (buttonX == 1.0 ? true : false);
+        return true;//(buttonX == 1.0 ? true : false);
     }
 
     //method to check if an indicator button on steering wheel has been pressed.

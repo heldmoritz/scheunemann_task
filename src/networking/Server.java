@@ -20,7 +20,7 @@ public class Server {
         server = new ServerSocket(PORT);
         System.out.println("Launched server");
         running = true;
-        connectToClient();
+        //connectToClient();
     }
     
     private void connectToClient() {

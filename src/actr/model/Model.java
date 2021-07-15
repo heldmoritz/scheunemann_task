@@ -346,6 +346,7 @@ public class Model
 		stop = false;
 		taskUpdated = false;
 		task.start(con, n, practice, trialNum);
+		runUntilStop = true;
 		while (!stop && (events.hasMoreEvents() || runUntilStop))
 		{
 			Event event = events.next();
@@ -643,12 +644,12 @@ public class Model
 				if(trialNum < 10)
 				{
 					writer = new FileWriter(
-						"C:\\Users\\EyeTDisplay\\Desktop\\Driving_Experiment\\Driving_Java\\rehearsal\\data\\" + "data(1)_" + nBack + "-back_" + "_construction=" + construction + "_participant" + ServerMain.participantNumber + ".txt");
+					"C:\\Users\\Held\\Documents\\GitHub\\scheunemann_task\\rehearsal\\data\\" + "data(1)_" + nBack + "-back_" + "_construction=" + construction + "_participant" + ServerMain.participantNumber + ".txt");
 				}
 				else
 				{
 					writer = new FileWriter(
-						"C:\\Users\\EyeTDisplay\\Desktop\\Driving_Experiment\\Driving_Java\\rehearsal\\data\\" + "data(2)_" + nBack + "-back_" + "_construction=" + construction + "_participant" + ServerMain.participantNumber + ".txt");
+						"C:\\Users\\Held\\Documents\\GitHub\\scheunemann_task\\rehearsal\\data\\" + "data(2)_" + nBack + "-back_" + "_construction=" + construction + "_participant" + ServerMain.participantNumber + ".txt");
 				}
 				for (String str:output) {
 					writer.write(str);

@@ -1,10 +1,10 @@
 package actr.tasks.driving;
 
+import java.awt.Graphics;
 import networking.ServerMain;
 
 import java.util.Random;
 
-import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -19,11 +19,10 @@ import java.awt.GraphicsEnvironment;
  * @author Moritz Held
  */
 public class Speedsign extends Road {
-    public Speedsign(boolean con)
-    {
+    public Speedsign(boolean con) {
         super(con);
     }
-    double signOnset = 0;
+
     String speedlimit = "60"; // starting speed
     int speedI = 0;
     Position signPos;
@@ -32,16 +31,16 @@ public class Speedsign extends Road {
     String[] allLimits = { "40", "50", "60", "70", "80", "90", "100", "110", "120" };
     // String[] tmpLim = { "80", "90", "60", "90", "70", "100", "100", "90", "80" };
     // //to show off functionalities
+    int[] sign_times = { 5, 20, 40, 60, 80, 100, 120, 140, 160, 180 };
     boolean visible = false;
     boolean newSign = false;
     boolean firstSign = true;
     boolean firstAppearance = true;
     double firstAppearanceTime;
-    boolean passed = false;
     boolean signPassed = false;
 
-    void newSign(Env env) {
-        double time = env.time;
+    void create_new_sign(Env env) {
+
         if (env.simcar.nearPoint != null) {
             // pick a random speed with delta<30
             String previousLimit = speedlimit;
@@ -52,58 +51,25 @@ public class Speedsign extends Road {
             }
             // speedlimit = tmpLim[sign_count]; // tmp
             sign_count += 1; // tmp
-            // signFrac = env.simcar.fracIndex + (env.simcar.speed*env.sampleTime*400);
             signFrac = env.simcar.fracIndex + 100;
             signPos = Road.location(signFrac, env.road.lanes + 1.3);
             signPos.y = 1.5;
-            signOnset = time;
-            passed = false;
+            visible = true;
+            signPassed = false;
+            // ServerMain.participant.sendSpeedSign();
         }
     }
 
     void update(Env env) {
         double time = env.time;
-        if(firstSign)
-        {
-            if((int) (time + 3) % 5 == 0)
-            {
-                // -GL, for eye-tracker message
-                if (time > firstAppearanceTime + 2) {
-                    firstAppearance = true;
-                }
-                if (firstAppearance) {
-                    ServerMain.participant.sendSpeedSign();
-                    firstAppearance = false;
-                    firstAppearanceTime = time;
-                }
-                newSign(env);
-                newSign = true;
-                firstSign = false;
-            }
-        }
-        else
-        {
-            if((int) (time - 2) % 20 == 0)
-            {
-                // -GL, for eye-tracker message
-                if (time > firstAppearanceTime + 2) {
-                    firstAppearance = true;
-                }
-                if (firstAppearance) {
-                    ServerMain.participant.sendSpeedSign();
-                    firstAppearance = false;
-                    firstAppearanceTime = time;
-                }
 
-                newSign(env);
-                newSign = true;
-            }
+        if (((Math.rint(time) + 3) % sign_times[sign_count] )== 0 && !visible) {
+            create_new_sign(env);
         }
-        signPassed = false;
-        if ((signFrac != 0.0) && (signFrac < env.simcar.fracIndex) && !passed) {
-            passed = true;
+
+        if (env.simcar.fracIndex > signFrac){
             signPassed = true;
-            signPos = null;
+            visible = false;
         }
     }
 
@@ -169,14 +135,9 @@ public class Speedsign extends Road {
                     new File(System.getProperty("user.dir") + "/src/resources/speedsign_font.TTF"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(speedFont);
-        } catch (IOException e) {
+        } catch (IOException | FontFormatException e) {
             e.printStackTrace();
             speedFont = new Font("serif", Font.PLAIN, 24);
-            ;
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-            speedFont = new Font("serif", Font.PLAIN, 24);
-            ;
         }
         return speedFont;
     }

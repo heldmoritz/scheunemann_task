@@ -113,7 +113,7 @@ public class Core {
 	 * opens the file.
 	 */
 	public void openFrame() {
-		String filename = "C:\\Users\\EyeTDisplay\\Desktop\\Driving_Experiment\\Driving_Java\\rehearsal\\0back.actr"; //npk i changes file path cos it wasnt working
+		String filename = "C:/Users/Held/Documents/GitHub/scheunemann_task/rehearsal/0back.actr"; //npk i changes file path cos it wasnt working
 		openFrame(new File(filename));
 		File file = new File(filename); // mlh
 		Model.outputPath = file.getParent() + "\\data\\"; // mlh
