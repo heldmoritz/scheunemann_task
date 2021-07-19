@@ -165,7 +165,7 @@ public class Simcar extends Vehicle {
 		//car_accel_pedal = controlValues.get(ACCEL);
 		//car_brake_pedal = controlValues.get(BRAKE);
 		car_steer = 0;
-		car_accel_pedal = 0.5;
+		car_accel_pedal = 0.8;
 		car_brake_pedal = 0;
 
 		steerAngle = car_steer;
@@ -263,14 +263,18 @@ public class Simcar extends Vehicle {
 		int top_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.375);
 		int top_mirror_x_3 = (int) Math.rint(Env.envWidth * 0.3535);
 
-		int left_mirror_x_1	= (int) Math.rint(Env.envWidth * 0.137);
+		//int left_mirror_x_1	= (int) Math.rint(Env.envWidth * 0.137);
+		int left_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.05);
 		int left_mirror_y_1	= (int) Math.rint(Env.envHeight * 0.625);
-		int left_mirror_x_2	= (int) Math.rint(Env.envWidth * 0.1395);
+		//int left_mirror_x_2	= (int) Math.rint(Env.envWidth * 0.1395);
+		int left_mirror_x_2 = (int) left_mirror_x_1 + 5;
 		int left_mirror_y_2	= (int) Math.rint(Env.envHeight * 0.630);
 		
-		int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.637);
+		// int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.637);
+		int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.8);
 		int right_mirror_y_1 = (int) Math.rint(Env.envHeight * 0.625);
-		int right_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.6395);
+		// int right_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.6395);
+		int right_mirror_x_2 = right_mirror_x_1 + 5;
 		int right_mirror_y_2 = (int) Math.rint(Env.envHeight * 0.630);
 
 		int rect_x_1 = 0;
@@ -326,6 +330,7 @@ public class Simcar extends Vehicle {
 		g.fillRoundRect(left_mirror_x_1, left_mirror_y_1, 90, 60, 40, 20);
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRoundRect(left_mirror_x_2, left_mirror_y_2, 80, 50, 40, 20);
+		//g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
 
 		// If autocar is behind simcar in left lane, display car in left mirror
 		if((env.autocar.lane < this.lane) && (distance > 0) && (distance <= 80))
