@@ -46,6 +46,9 @@ public class Autocar extends Vehicle {
 				} else if (env.simcar.lane == 3) {
 					lane = Math.random() > 0.5 ? 2 : 1;
 					lane = env.construction.construction_vis ? 2 : lane;
+					changeStart = env.time;
+					fl = Math.min(lane + 1, 3);
+					turn = true;
 
 				} else if (env.simcar.lane % 1 != 0) {
 					lane = 2;

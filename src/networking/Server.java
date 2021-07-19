@@ -60,6 +60,7 @@ public class Server {
     }
 
     public void send(String message) {
+        /*
         try {
             PrintWriter out = new PrintWriter(client.getOutputStream(), true);
             out.println(message);
@@ -67,6 +68,8 @@ public class Server {
             System.err.println("Something went wrong in sending output to the client.");
             e.printStackTrace();
         }
+        */
+        System.out.println(message);
     }
 
 }

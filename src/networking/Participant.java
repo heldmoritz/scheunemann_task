@@ -48,6 +48,10 @@ public class Participant {
         s.send("do/ START RECORDING");
     }
 
+    public void stopRecording(){
+        s.send("do/ STOP RECORDING");
+    }
+
     public void setStartTime(long time) {
         startTime = time;
     }
@@ -61,14 +65,6 @@ public class Participant {
 
     public void sendSpeedSign() {
         s.send("send/ SPEED SIGN");
-    }
-
-    public void sendConstructionStart() {
-        s.send("send/ CONSTRUCTION START");
-    }
-
-    public void sendConstructionStop() {
-        s.send("send/ CONSTRUCTION STOP");
     }
 
     public void endTrial() {

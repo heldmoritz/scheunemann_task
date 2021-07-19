@@ -95,7 +95,7 @@ public class Env {
 			construction.drawConstruction(g, this);
 
 		simcar.draw(g, this);
-		ServerMain.participant.sendStartTime();
+		//ServerMain.participant.sendStartTime();
 	}
 
 	final double simViewAH = .13;

@@ -50,7 +50,7 @@ public class Frame extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent event) {
-				ServerMain.participant.endExperiment();
+				//ServerMain.participant.endExperiment();
 				System.exit(0);
 			}
 		});
@@ -401,20 +401,24 @@ public class Frame extends JFrame {
 				if (!core.acquireLock(frame))
 					return null;
 				stop = false;
+				ServerMain.participant.prepareExperiment();
 				String welcomeMessage = "<html>Welcome!<br><br>You will be driving on a three lane highway. Speed signs will show up at different points.<br>Your task is to drive according to the speed limit from n speed signs ago, where n is either 0, 1, 2, 3, or 4.<br>You will have to memorize the order of the speed limits as they appear.<br><br>0-back trial: simply drive the speed limit presented on the speed sign you see.<br>1-back trial: drive according to the speed limit presented 1 speed sign ago.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This means you need to memorize the previous speed sign each time you see one.<br>2-back trial: drive according to the speed limit from 2 speed signs ago.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Again this means you need to memorize speed limits in the order they are presented,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which you will have to do for the 3-back trial and the 4-back trial too.<br>3-back trial: drive according to the speed limit from 3 speed signs ago.<br>4-back trial: drive according to the speed limit from 4 speed signs ago.<br><br>Before each trial you will be told which n-back trial will be tested.<br>The right pedal is the accelerator and the left pedal is the break.<br><br>First you will drive a practice round with a 2-back trial.<br>Press X to start.</html>";
 				new NDialog(frame, welcomeMessage, "Instructions", new Dimension(360, 200));
 				update();
 				clearOutput();
 				if (model != null && model.getTask() != null) {
 					// Perform 1 practice trial, 2-back task, only 5 speed-signs.
+					
 					String title_message = "Practice trial";
 					String content_message = "In this practice trial, you will perform a 2-back task.";
+					/*
 					 new NDialog(frame, content_message, title_message, new Dimension(200, 100));
 					model = Model.compile(modelText, frame);
 					showTask(model.getTask());
-					model.setParameter(":real-time", "1");
+					model.setParameter(":real-time", "10");
 					model.run(false, 2, true, -1);
 					model.getTask().finish();
+					*/
 					// This loop runs 10 recorded iterations of the driving-simulation.
 					for (int i = 0; !stop && i < trials.getList().size(); i++) {
 						if(i == 10)
@@ -425,7 +429,7 @@ public class Frame extends JFrame {
 						}
 						boolean construction = trials.getList().get(i).construction;
 						int nBack = trials.getList().get(i).nBack;
-
+						ServerMain.participant.prepareTrial(i, construction, nBack);
 						title_message = "Trial " + (i+1) + " - Progress: " + Math.round((i) * 100.0 / trials.getList().size()) + "% / 100%";
 						content_message = "In the next trial, you will perform a " + nBack + "-back task.";
 						new NDialog(frame, content_message, title_message, new Dimension(200, 100));
@@ -436,6 +440,7 @@ public class Frame extends JFrame {
 						model.getTask().finish();
 					}
 					// model = null;
+					ServerMain.participant.endExperiment();
 					hideTask();
 					title_message = "End";
 					content_message = "This is the end of the experiment, thanks for participating!";

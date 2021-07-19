@@ -71,11 +71,9 @@ public class Controls {
                 //negative values correspond to accelerator
                 if (steerPedalInput.getPollData() < 0) {
                     accel = steerPedalInput.getPollData();
-                    accel = convertAccel(accel);
                     brake = 0;
                 } else { //positive values correspond to brake
                     brake  = steerPedalInput.getPollData();
-                    brake = convertBrake(brake);
                     accel = 0;
                 }
             } 
@@ -86,18 +84,6 @@ public class Controls {
         controls.add(1, accel);
         controls.add(2, brake);
         return controls;
-    }
-
-    //converts accelerator range from (0, 0.83) to (0, 1) 
-    private double convertAccel(double x) {
-        double accel =  - (1 / 0.83) * x;
-        return accel <= 1 ? accel : 1;
-    }
-    
-    //converts accelerator range from (0, 0.76) to (0, 1) 
-    private double convertBrake(double x) {
-        double brake = (1 / 0.76) * x;
-        return brake <= 1 ? brake : 1;
     }
 
     //checks if the steer/accel/brake values have been read from external input

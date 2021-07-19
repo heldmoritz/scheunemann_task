@@ -31,7 +31,7 @@ public class Speedsign extends Road {
     String[] allLimits = { "40", "50", "60", "70", "80", "90", "100", "110", "120" };
     // String[] tmpLim = { "80", "90", "60", "90", "70", "100", "100", "90", "80" };
     // //to show off functionalities
-    int[] sign_times = { 5, 20, 40, 60, 80, 100, 120, 140, 160, 180 };
+    int[] sign_times = { 5, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300};
     boolean visible = false;
     boolean newSign = false;
     boolean firstSign = true;
@@ -56,7 +56,7 @@ public class Speedsign extends Road {
             signPos.y = 1.5;
             visible = true;
             signPassed = false;
-            // ServerMain.participant.sendSpeedSign();
+            ServerMain.participant.sendSpeedSign();
         }
     }
 
