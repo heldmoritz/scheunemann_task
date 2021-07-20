@@ -89,14 +89,8 @@ public class Driving extends actr.task.Task {
 		this.nBack = n;
 		this.practice = practice;
 		this.trialNum = trialNum;
-		if(!practice)
-		{
-			endTime += 20*n;
-		}
-		else
-		{
-			endTime = 90;
-		}
+		endTime += practice ? 90 : 20*n;
+
 		System.out.println("Endtime is: " + endTime);
 		simulation = new Simulation(getModel(), con);
 		setLayout(new BorderLayout());

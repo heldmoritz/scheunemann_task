@@ -19,6 +19,7 @@ public class Env {
 	Autocar autocar;
 	Speedsign speedsign;
 	Construction construction;
+	Controls controls;
 	int keypress;
 	boolean done;
 	boolean signVisible = false;
@@ -35,6 +36,9 @@ public class Env {
 
 	Env(Driver driver, Scenario s, boolean con) {
 		scenario = s;
+
+		controls = new Controls();
+		controls.startUp();
 
 		road = new Road(con);
 		road.startup();

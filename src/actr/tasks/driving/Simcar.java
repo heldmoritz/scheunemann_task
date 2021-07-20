@@ -164,8 +164,8 @@ public class Simcar extends Vehicle {
 		//car_steer = controlValues.get(STEER);
 		//car_accel_pedal = controlValues.get(ACCEL);
 		//car_brake_pedal = controlValues.get(BRAKE);
-		car_steer = 0;
-		car_accel_pedal = 0.8;
+		car_steer = env.controls.getSteering();
+		car_accel_pedal = -env.controls.getAccelerator();
 		car_brake_pedal = 0;
 
 		steerAngle = car_steer;

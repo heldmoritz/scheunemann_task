@@ -46,14 +46,14 @@ public class Autocar extends Vehicle {
 				} else if (env.simcar.lane == 3) {
 					lane = Math.random() > 0.5 ? 2 : 1;
 					lane = env.construction.construction_vis ? 2 : lane;
-					changeStart = env.time;
-					fl = Math.min(lane + 1, 3);
-					turn = true;
-
 				} else if (env.simcar.lane % 1 != 0) {
 					lane = 2;
 					speed = env.simcar.speed;
 				}
+			} else if (lane == 1) {
+				changeStart = env.time;
+				fl = Math.min(lane + 1, 3);
+				turn = true;
 			}
 		} else {
 			if (lane == (int) env.simcar.lane && env.construction.construction_vis
@@ -66,7 +66,7 @@ public class Autocar extends Vehicle {
 				fl = Math.min(lane + 1, 3);
 				turn = true;
 
-			} else if (lane == 1 && env.simcar.lane < 2 && env.construction.construction_vis == false){
+			} else if (lane == 1 && env.simcar.lane < 2 && env.construction.construction_vis == false) {
 				changeStart = env.time;
 				fl = Math.min(lane + 2, 3);
 				turn = true;
@@ -91,10 +91,8 @@ public class Autocar extends Vehicle {
 		}
 		fracIndex = Math.max(env.simcar.fracIndex - 100, fracIndex);
 
-
 		if ((env.time < changeStart + ot) && turn)
 			switchLane(fl, env);
-
 
 	}
 
@@ -102,7 +100,7 @@ public class Autocar extends Vehicle {
 
 		Position fp = env.road.middle(fracIndex, fl);
 		double lw = env.construction.construction_bool ? Env.scenario.lanewidth[1] : Env.scenario.lanewidth[0];
-		double inc = ((Math.abs((fp.z - env.road.middle(fracIndex, (int) lane).z)) /(20 * ot)))/lw;
+		double inc = ((Math.abs((fp.z - env.road.middle(fracIndex, (int) lane).z)) / (1 / Env.sampleTime * ot))) / lw;
 		inc = p.z > fp.z ? inc * (-1) : inc;
 
 		if (0.1 < Math.abs(fp.z - p.z)) {

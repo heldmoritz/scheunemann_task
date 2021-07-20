@@ -67,17 +67,14 @@ public class NDialog extends JDialog{
     //npk
     public void closeDialog() {
         //instantiate controls
-        //Controls controls = new Controls();
+        Controls controls = new Controls();
 
-        
         //stay in loop until the button is pressed
-        //while(!controls.buttonXpressed()){}
-        try{
-            Thread.sleep(500);
+        //while(!controls.buttonXpressed()){
+        //    System.out.println(controls.getAccelerator());
 
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
+       // }
+
         dispose();
     }
 }
