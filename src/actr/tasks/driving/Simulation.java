@@ -74,7 +74,7 @@ public class Simulation {
 		s.signVisible = env.signVisible;
 
 		// Nilma added:
-		s.indicator = env.simcar.indicator;
+		// = env.simcar.indicator;
 		return s;
 	}
 

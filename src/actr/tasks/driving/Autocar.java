@@ -128,8 +128,6 @@ public class Autocar extends Vehicle {
 		if (im1 != null && im2 != null) {
 			g.setColor(Color.blue);
 			g.fillRect(im1.x, im2.y, im2.x - im1.x, im1.y - im2.y);
-		} else {
-
 		}
 	}
 }

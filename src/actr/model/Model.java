@@ -412,7 +412,6 @@ public class Model {
 		taskUpdated = false;
 		ServerMain.participant.startRecording();
 		task.start(con, n, practice, trialNum);
-		runUntilStop = true;
 		while (!stop && (events.hasMoreEvents() || runUntilStop)) {
 			Event event = events.next();
 
@@ -757,7 +756,11 @@ public class Model {
 
 	// mlh
 	public static void print(List<String> output, boolean construction, int nBack, boolean practice,
-			int trialNum) { /*
+			int trialNum) { 
+				
+				String cd = new File("").getAbsolutePath();
+
+				/*
 							 * try {
 							 * 
 							 * if(!practice) { FileWriter writer; if(trialNum < 10) { writer = new

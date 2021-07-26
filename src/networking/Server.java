@@ -20,7 +20,7 @@ public class Server {
         server = new ServerSocket(PORT);
         System.out.println("Launched server");
         running = true;
-        //connectToClient();
+        connectToClient();
     }
     
     private void connectToClient() {
@@ -60,15 +60,15 @@ public class Server {
     }
 
     public void send(String message) {
-        /*
+        
         try {
             PrintWriter out = new PrintWriter(client.getOutputStream(), true);
             out.println(message);
         } catch (IOException e){
-            System.err.println("Something went wrong in sending output to the client.");
+            System.err.println("Something went wrong with sending output to the client.");
             e.printStackTrace();
         }
-        */
+        
         System.out.println(message);
     }
 

@@ -41,9 +41,9 @@ public class Construction extends Road {
         {
             if(once)
             {
-                for(int i = 0; i < 8; i++)
+                for(int i = 0; i < 41; i++)
                 {
-                    pylons.add(90.0 +20.0*i);
+                    pylons.add(90+ 5.0*i);
                 }
                 once = false;
             }
@@ -63,10 +63,12 @@ public class Construction extends Road {
                 onset = onset + block_length * 2;
             }
     
-            // adding a new pylon every 10 meters
-            if (construction_vis && env.simcar.fracIndex + distAhead - 10 > pylons.get(pylons.size() - 1) + 10) {
-                if (env.simcar.fracIndex + distAhead - 10 < stop_con)
-                    pylons.add((Math.round(env.simcar.fracIndex / 10.0) * 10) + distAhead);
+            // adding a new pylon every x meters
+            int meters = 5;
+            if (construction_vis && env.simcar.fracIndex + distAhead - meters > pylons.get(pylons.size() - 1)) {
+                if (env.simcar.fracIndex + distAhead - meters < stop_con){
+                    pylons.add((Math.round(env.simcar.fracIndex / 5.0)) * 5 + distAhead);
+                }
             }
     
             if (env.simcar.fracIndex > stop_con && start_con != 0) {
@@ -85,7 +87,7 @@ public class Construction extends Road {
 
     void drawConstruction(Graphics g, Env env) {
         if (start_con > 0 && env.simcar.roadIndex < stop_con) {
-            pyno = pylons.size() - 30; // simply don't attempt to draw all the pylons in pylons[]
+            pyno = pylons.size() - 100; // simply don't attempt to draw all the pylons in pylons[]
             if (pyno < 0)
                 pyno = 0;
             drawPylon(g, env, pylons.get(pyno));
@@ -98,7 +100,10 @@ public class Construction extends Road {
         // pylon
         Coordinate im1;
         Coordinate im2;
-        if (env.world2image((location(pylonFrac, lane))) != null) {
+        Coordinate testloc1 = env.world2image(location(pylonFrac, lane-0.6));
+        Coordinate testloc2 = env.world2image(location(pylonFrac, lane+0.6));
+
+        if (testloc1 != null && testloc2 !=null) {
             g.setColor(Color.white);
             im1 = env.world2image(location(pylonFrac, lane - 0.03), 0.9);
             im2 = env.world2image(location(pylonFrac, lane + 0.03), 0.0);

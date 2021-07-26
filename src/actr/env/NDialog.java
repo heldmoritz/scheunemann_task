@@ -59,7 +59,6 @@ public class NDialog extends JDialog{
         getContentPane().add(panel);
         pack();
         setVisible(true);
-
         //npk - close dialog box when button X on steering wheel is pressed
         closeDialog();                     
     }
@@ -68,12 +67,11 @@ public class NDialog extends JDialog{
     public void closeDialog() {
         //instantiate controls
         Controls controls = new Controls();
+        controls.startUp();
 
         //stay in loop until the button is pressed
-        //while(!controls.buttonXpressed()){
-        //    System.out.println(controls.getAccelerator());
-
-       // }
+        while(!controls.buttonXpressed()){
+     }
 
         dispose();
     }

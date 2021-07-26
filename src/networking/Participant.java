@@ -16,8 +16,6 @@ public class Participant {
     private static final short dimX = 1920;
     private static final short dimY = 1080;
 
-    private long startTime = 0;
-
     public Participant(int participantNumber) {
         this.participantNumber = participantNumber;
         ApplicationMain.startApplication();
@@ -52,23 +50,16 @@ public class Participant {
         s.send("do/ STOP RECORDING");
     }
 
-    public void setStartTime(long time) {
-        startTime = time;
-    }
-
-    public void sendStartTime() {
-        if (startTime != 0) {
-            s.send("info/ START TIME " + startTime);
-            startTime = 0;
-        }
-    }
-
     public void sendSpeedSign() {
         s.send("send/ SPEED SIGN");
     }
 
     public void endTrial() {
         s.send("do/ END TRIAL");
+    }
+
+    public void startTrial(){
+        s.send("do/ START TRIAL");
     }
 
     public void endExperiment() {

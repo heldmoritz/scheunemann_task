@@ -113,7 +113,8 @@ public class Core {
 	 * opens the file.
 	 */
 	public void openFrame() {
-		String filename = "C:/Users/Held/Documents/GitHub/scheunemann_task/rehearsal/0back.actr"; //npk i changes file path cos it wasnt working
+		String cd = new File("").getAbsolutePath();
+		String filename = cd + "/rehearsal/0back.actr";
 		openFrame(new File(filename));
 		File file = new File(filename); // mlh
 		Model.outputPath = file.getParent() + "\\data\\"; // mlh

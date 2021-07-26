@@ -426,6 +426,7 @@ public class Frame extends JFrame {
 							title_message = "Break";
 							content_message = "This is the halfway point of the experiment, you can now take a break.";
 							new NDialog(frame, content_message, title_message, new Dimension(200, 100));
+							ServerMain.participant.doDriftCorrection();
 						}
 						boolean construction = trials.getList().get(i).construction;
 						int nBack = trials.getList().get(i).nBack;
@@ -436,7 +437,9 @@ public class Frame extends JFrame {
 						model = Model.compile(modelText, frame);
 						showTask(model.getTask());
 						model.setParameter(":real-time", "1");
+						ServerMain.participant.startTrial();
 						model.run(construction, nBack, false, i);
+						ServerMain.participant.endTrial();
 						model.getTask().finish();
 					}
 					// model = null;

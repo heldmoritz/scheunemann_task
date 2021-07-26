@@ -10,6 +10,9 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.Observer;
 
+import javax.lang.model.util.ElementScanner14;
+
+import java.io.File;
 import java.awt.Toolkit;
 
 import actr.env.Frame;
@@ -22,19 +25,12 @@ import actr.env.Frame;
 public class Simcar extends Vehicle {
 	Driver driver;
 
-	//npk blinkers
-    int countR = 0;
-    boolean blinkR = false;
-    int blinkCountR = 0;
-    int countL = 0;
-    boolean blinkL = false;
-    int blinkCountL = 0;
-	boolean indicator;
+	// mlh indicator
+	private double startR = -999;
+	private double startL = -999;
+	private int countR;
+	private int countL;
 
-	//npk - index for steer, accel, brake in a list
-	int STEER = 0;
-	int ACCEL = 1;
-	int BRAKE = 2;
 	double steerAngle;
 	double accelerator;
 	double brake;
@@ -154,19 +150,17 @@ public class Simcar extends Vehicle {
 			else
 				car_speed = 0;
 		}
-		//npk - locate steering wheel
-		//Controls controls = new Controls();
 
-		//npk - get steer axis & accel/brake values
-		//List<Double> controlValues = controls.getControls();
-
-		//npk - set steer axis & accel/brake values
-		//car_steer = controlValues.get(STEER);
-		//car_accel_pedal = controlValues.get(ACCEL);
-		//car_brake_pedal = controlValues.get(BRAKE);
 		car_steer = env.controls.getSteering();
-		car_accel_pedal = -env.controls.getAccelerator();
-		car_brake_pedal = 0;
+		car_accel_pedal = env.controls.getAccelerator() > 0 ? env.controls.getAccelerator() : 0;
+		car_brake_pedal = env.controls.getAccelerator() < 0 ? -env.controls.getAccelerator() : 0;
+
+		String indicator = env.controls.getIndicator();
+		if (indicator.equals("right")) {
+			startR = env.time;
+		} else if (indicator.equals("left")) {
+			startL = env.time;
+		}
 
 		steerAngle = car_steer;
 		accelerator = car_accel_pedal;
@@ -180,7 +174,7 @@ public class Simcar extends Vehicle {
 		// drift -mh
 		double forcing = 0.125 * (0.01 * Math.sin(2.0 * 3.14 * 0.13 * time + 1.137)
 				+ 0.005 * Math.sin(2.0 * 3.14 * 0.47 * time + 0.875));
-		forcing /= 2; // scale the drift
+		forcing /= 1; // scale the drift
 		car_deltaf += forcing;
 
 		derivs(y, dydx);
@@ -242,7 +236,7 @@ public class Simcar extends Vehicle {
 		double distLeft = env.simcar.p.z - env.road.left(env.simcar.fracIndex, lane).z;
 		double distRight = env.simcar.p.z - env.road.right(env.simcar.fracIndex, lane).z;
 		dist_to_nearest_lane = Utilities.absoluteMin(distLeft, distRight);
-		diffDist = Math.abs(distLeft) - Math.abs(distRight); //positive -> should drive to the right
+		diffDist = Math.abs(distLeft) - Math.abs(distRight); // positive -> should drive to the right
 	}
 
 	void update(Env env) {
@@ -263,13 +257,13 @@ public class Simcar extends Vehicle {
 		int top_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.375);
 		int top_mirror_x_3 = (int) Math.rint(Env.envWidth * 0.3535);
 
-		//int left_mirror_x_1	= (int) Math.rint(Env.envWidth * 0.137);
+		// int left_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.137);
 		int left_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.05);
-		int left_mirror_y_1	= (int) Math.rint(Env.envHeight * 0.625);
-		//int left_mirror_x_2	= (int) Math.rint(Env.envWidth * 0.1395);
+		int left_mirror_y_1 = (int) Math.rint(Env.envHeight * 0.625);
+		// int left_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.1395);
 		int left_mirror_x_2 = (int) left_mirror_x_1 + 5;
-		int left_mirror_y_2	= (int) Math.rint(Env.envHeight * 0.630);
-		
+		int left_mirror_y_2 = (int) Math.rint(Env.envHeight * 0.630);
+
 		// int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.637);
 		int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.8);
 		int right_mirror_y_1 = (int) Math.rint(Env.envHeight * 0.625);
@@ -289,7 +283,6 @@ public class Simcar extends Vehicle {
 
 		g.setColor(Color.black);
 		g.fillRect(0, Env.envHeight - dashHeight, Env.envWidth, dashHeight);
-
 
 		// mh - speedometer
 
@@ -311,9 +304,9 @@ public class Simcar extends Vehicle {
 		double distance = this.fracIndex - env.autocar.fracIndex;
 
 		// If autocar is behind simcar in same lane, display car in top mirror
-		if((env.autocar.lane == this.lane) && (distance > 0) && (distance <= 80))
-		{
-			// Normalize distance, if distance == 80 (autocar is 80 metres behind simcar), scale is 0.
+		if ((env.autocar.lane == this.lane) && (distance > 0) && (distance <= 80)) {
+			// Normalize distance, if distance == 80 (autocar is 80 metres behind simcar),
+			// scale is 0.
 			double scale = (distance - 80) / (0 - 80);
 			int width = (int) Math.rint(scale * 74.0);
 			int height = (int) Math.rint(scale * 34.0);
@@ -330,11 +323,10 @@ public class Simcar extends Vehicle {
 		g.fillRoundRect(left_mirror_x_1, left_mirror_y_1, 90, 60, 40, 20);
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRoundRect(left_mirror_x_2, left_mirror_y_2, 80, 50, 40, 20);
-		//g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
+		// g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
 
 		// If autocar is behind simcar in left lane, display car in left mirror
-		if((env.autocar.lane < this.lane) && (distance > 0) && (distance <= 80))
-		{
+		if ((env.autocar.lane < this.lane) && (distance > 0) && (distance <= 80)) {
 			double scale = (distance - 80) / (0 - 80);
 			int width = (int) Math.rint(scale * 64.0);
 			int height = (int) Math.rint(scale * 34.0);
@@ -351,8 +343,7 @@ public class Simcar extends Vehicle {
 		g.fillRoundRect(right_mirror_x_2, right_mirror_y_2, 80, 50, 40, 20);
 
 		// If autocar is behind simcar in right lane, display car in right mirror
-		if((env.autocar.lane > this.lane) && (distance > 0) && (distance <= 80))
-		{
+		if ((env.autocar.lane > this.lane) && (distance > 0) && (distance <= 80)) {
 			double scale = (distance - 80) / (0 - 80);
 			int width = (int) Math.rint(scale * 64.0);
 			int height = (int) Math.rint(scale * 34.0);
@@ -360,108 +351,56 @@ public class Simcar extends Vehicle {
 			g.setColor(Color.blue);
 			g.fillRect(right_mirror_x_1 + 12, Env.envHeight - dashHeight - 55 + 8, width, height);
 		}
-		g.setColor(new Color(14,14,14));
+		g.setColor(new Color(14, 14, 14));
 		g.fillRect(rect_x_1, rect_y_1, rect_width_1, rect_height_1);
 
-		g.setColor(new Color(14,14,14));
+		g.setColor(new Color(14, 14, 14));
 		g.fillRect(rect_x_2, rect_y_2, rect_width_2, rect_height_2);
 
-		//npk blinkers
-        //Controls controls = new Controls();
-        //int blinkers = controls.blinkers();
-		int blinkers = 2;
- 
-        int RIGHT = 1;
-        int LEFT = 2;
- 
-		//draws the arrow for 75 iterations, then goes into 'first blink mode' 
-		// where it doesn't draw for another 75 iterations and the blinkcounter is increased
-		// as well as blink set to true. After these 75 iterations, blink is set to false
-		// and it repeats three times. everything is then reset.
-        if (countR > 0 && blinkCountR < 3 && !blinkR) {
-            countR += 1;
-            if (countR < 75){
-                drawRightArrow(g);
-            } else {
-                countR = 0;
-                blinkR = true;
-                blinkCountR += 1;
-            }
-        } else if (blinkR) {
-            countR += 1;
-            if (countR > 75) {
-                blinkR = false;
-                countR = 1;
-            }
-        } else {
-            blinkR = false;
-            blinkCountR = 0;
-            countR = 0;
-			indicator = false;
-        }
-        if (blinkers == RIGHT) {
-            drawRightArrow(g);
-            countR = 1;
-			indicator = true;
-        }
- 
-		//same as comment above, but for the left arrow
-        if (countL > 0 && blinkCountL < 3 && !blinkL) {
-            countL += 1;
-            if (countL < 75){
-                drawLeftArrow(g);
-            } else {
-                countL = 0;
-                blinkL = true;
-                blinkCountL += 1;
-            }
-        } else if (blinkL) {
-            countL += 1;
-            if (countL > 75) {
-                blinkL = false;
-                countL = 1;
-            }
-        } else {
-            blinkL = false;
-            blinkCountL = 0;
-            countL = 0;
-			indicator = false;
-        }
-        if (blinkers == LEFT) {
-            drawLeftArrow(g);
-            countL = 1;
-			indicator = true;
-        }
- 
-        
-    }
-    
-    //npk blinkers - draws right arrow in dashboard
-    private void drawRightArrow(Graphics g) {
-        int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.637);
-        int speedometer_y = (int) Math.rint(Env.envHeight * 0.83);
- 
-        int rightBlinker_x1 = (int) right_mirror_x_1;
-        int rightBlinker_y = (int) speedometer_y;
-		
-		String imageURL = "C:\\Users\\EyeTDisplay\\Desktop\\Driving_Experiment\\Driving_Java\\src\\resources\\rightArrow.png";
+		// TODO: INDICATORS
+		if (startR + 4 > env.time) {
+			double nS = Math.round(startR * 2) / 2.0;
+			double nT = Math.round(env.time * 2) / 2.0;
+			if (nS == nT || nS + 1 == nT || nS + 2 == nT)
+				drawRightArrow(g);
+		}
+
+		if (startL + 4 > env.time) {
+			double nS = Math.round(startL * 2) / 2.0;
+			double nT = Math.round(env.time * 2) / 2.0;
+			if (nS == nT || nS + 1 == nT || nS + 2 == nT)
+				drawLeftArrow(g);
+		}
+	}
+
+	// npk blinkers - draws right arrow in dashboard
+	private void drawRightArrow(Graphics g) {
+		int right_mirror_x_1 = (int) Math.rint(Env.envWidth * 0.637);
+		int speedometer_y = (int) Math.rint(Env.envHeight * 0.83);
+
+		int rightBlinker_x1 = (int) right_mirror_x_1;
+		int rightBlinker_y = (int) speedometer_y;
+
+		String cd = new File("").getAbsolutePath();
+		String imageURL = cd + "\\src\\resources\\rightArrow.png";
 		Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		g.drawImage(image, rightBlinker_x1, rightBlinker_y - 50, null);
-    }
- 
-    //npk blinkers - draws left arrow in dashboard
-    private void drawLeftArrow(Graphics g) {
-        int left_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.141);
-        int speedometer_y = (int) Math.rint(Env.envHeight * 0.83);
- 
-        int leftBlinker_x1 = (int) left_mirror_x_2;
-        int leftBlinker_y = (int) speedometer_y;
-        g.setColor(Color.ORANGE);
+	}
 
-		String imageURL = "C:\\Users\\EyeTDisplay\\Desktop\\Driving_Experiment\\Driving_Java\\src\\resources\\leftArrow.png";
+	// npk blinkers - draws left arrow in dashboard
+	private void drawLeftArrow(Graphics g) {
+		int left_mirror_x_2 = (int) Math.rint(Env.envWidth * 0.141);
+		int speedometer_y = (int) Math.rint(Env.envHeight * 0.83);
+
+		int leftBlinker_x1 = (int) left_mirror_x_2;
+		int leftBlinker_y = (int) speedometer_y;
+		g.setColor(Color.ORANGE);
+
+		String cd = new File("").getAbsolutePath();
+		String imageURL = cd + "\\src\\resources\\leftArrow.png";
 		Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
 		g.drawImage(image, leftBlinker_x1, leftBlinker_y - 50, null);
-    }
+	}
 
 	double devscale = .0015;
 	double devx = -.7;
