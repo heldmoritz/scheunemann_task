@@ -4,7 +4,6 @@ import pylink
 import client
 import time
 
-
 # global variables, will be changed by input_handler
 display_x = 0
 display_y = 0
@@ -12,11 +11,13 @@ edf_file_name = ""
 trial_number = 0
 trial_id = ""
 
-pylink.EyeLink()
+pylink.EyeLink(None)
 client.start_receiving_thread()
 
 
 def prepare_experiment():
+	print('preparing experiment..')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -48,6 +49,8 @@ def prepare_experiment():
 
 
 def do_calibration():
+	print('doing calibration..')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -60,6 +63,8 @@ def do_calibration():
 
 
 def prepare_trial():
+	print('preparing trial..')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -70,6 +75,8 @@ def prepare_trial():
 	print(record_message)
 
 def drift_correction():
+	print('doing drift correction')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -83,6 +90,8 @@ def drift_correction():
 
 
 def start_recording():
+	print('starting to record..')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -100,6 +109,8 @@ def start_recording():
 
 
 def send_SYNCTIME(start_time):
+	print('sending time')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -110,6 +121,8 @@ def send_SYNCTIME(start_time):
 
 
 def send_tracker(message):
+	print('sending tracker')
+	return
 	tracker = pylink.getEYELINK()
 	if not tracker.isConnected():
 		report_error("ABORT EXPERIMENT")
@@ -118,6 +131,8 @@ def send_tracker(message):
 
 
 def end_trial():
+	print('ending trial')
+	return
 	tracker = pylink.getEYELINK()
 
 	pylink.endRealTimeMode()
@@ -128,6 +143,8 @@ def end_trial():
 
 
 def end_experiment():
+	print('ending experiment..')
+	return
 	tracker = pylink.getEYELINK()
 
 	if tracker is not None:
@@ -140,4 +157,5 @@ def end_experiment():
 
 
 def report_error(error_message):
+	return
 	client.send(error_message)

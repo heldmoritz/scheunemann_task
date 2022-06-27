@@ -1,5 +1,4 @@
 package actr.task;
-import actr.env.Condition;
 import java.awt.*;
 import java.awt.geom.*;
 import java.io.*;
@@ -173,7 +172,7 @@ public class Task extends JPanel {
 	 * Starts the task. This method can be overridden to allow a custom task to
 	 * initialize the interfaces and any necessary data structures.
 	 */
-	public void start(boolean con, int n, boolean practice, int trialNum) {
+	public void start(int nback, boolean drivingDiff) {
 	}
 
 	/**

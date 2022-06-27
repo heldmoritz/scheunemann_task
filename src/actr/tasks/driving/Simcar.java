@@ -151,11 +151,11 @@ public class Simcar extends Vehicle {
 				car_speed = 0;
 		}
 
-		car_steer = env.controls.getSteering();
-		car_accel_pedal = env.controls.getAccelerator() > 0 ? env.controls.getAccelerator() : 0;
-		car_brake_pedal = env.controls.getAccelerator() < 0 ? -env.controls.getAccelerator() : 0;
+		car_steer = 0;//env.controls.getSteering();
+		car_accel_pedal = 0.5;//env.controls.getAccelerator() > 0 ? env.controls.getAccelerator() : 0;
+		car_brake_pedal = 0;//env.controls.getAccelerator() < 0 ? -env.controls.getAccelerator() : 0;
 
-		String indicator = env.controls.getIndicator();
+		String indicator = ""; //env.controls.getIndicator();
 		if (indicator.equals("right")) {
 			startR = env.time;
 		} else if (indicator.equals("left")) {

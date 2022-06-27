@@ -6,7 +6,7 @@ import threading
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 HOST = "localhost"
-PORT = 9000
+PORT = 9999
 print("Launched client")
 sock.connect((HOST, PORT))
 print("Connected to server")

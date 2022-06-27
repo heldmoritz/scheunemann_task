@@ -25,7 +25,7 @@ class Actions {
 		runAction = new AbstractAction("Run", Resources.getIcon("jlfPlay16.gif")) {
 			public void actionPerformed(ActionEvent e) {
 				core.openFrame();
-				frame.runAnalysis();
+				frame.run();
 			}
 		};
 	

@@ -19,7 +19,9 @@ public class Env {
 	Autocar autocar;
 	Speedsign speedsign;
 	Construction construction;
-	Controls controls;
+	CPS cps;
+	HUD hud;
+	//Controls controls;
 	int keypress;
 	boolean done;
 	boolean signVisible = false;
@@ -37,8 +39,8 @@ public class Env {
 	Env(Driver driver, Scenario s, boolean con) {
 		scenario = s;
 
-		controls = new Controls();
-		controls.startUp();
+		//controls = new Controls();
+		//controls.startUpDUMMY();
 
 		road = new Road(con);
 		road.startup();
@@ -52,6 +54,9 @@ public class Env {
 		speedsign = new Speedsign(con);
 
 		construction = new Construction(con);
+
+		cps = new CPS(simcar, this);
+		hud = new HUD(simcar);
 
 		done = false;
 	}
@@ -99,6 +104,7 @@ public class Env {
 			construction.drawConstruction(g, this);
 
 		simcar.draw(g, this);
+		hud.draw(g, this);
 		//ServerMain.participant.sendStartTime();
 	}
 

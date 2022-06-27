@@ -18,6 +18,11 @@ public class Controls {
     Controller steerPedals = null;
 
     // function to locate the steering wheel & pedals connected to PC.
+    public void startUpDUMMY(){
+        System.out.println("This is where you would connect to the steering wheel.");
+    }
+
+
     public void startUp() {
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
         // Find the steering wheel
@@ -30,20 +35,23 @@ public class Controls {
 
         if (steerPedals == null) {
             System.out.println("Found no steering wheel!");
-            System.exit(0);
+            //System.exit(0);
         }
     }
 
     public double getAccelerator() {
-        return -getValue(Component.Identifier.Axis.Y);
+        return 0.5;
+        //return -getValue(Component.Identifier.Axis.Y);
     }
 
     public double getSteering() {
-        return getValue(Component.Identifier.Axis.X);
+        return 0;
+        //return getValue(Component.Identifier.Axis.X);
     }
 
     public boolean buttonXpressed() {
-        return (getValue(Component.Identifier.Button._6) == 1.0);
+        return true;
+        //return (getValue(Component.Identifier.Button._6) == 1.0);
     }
 
     public String getIndicator() {
@@ -55,7 +63,8 @@ public class Controls {
         } else {
             indicator = "";
         }
-        return indicator;
+        return "";
+        //return indicator;
     }
 
     public double getValue(Identifier identifier) {
@@ -65,7 +74,8 @@ public class Controls {
             Component component = components[i];
             Identifier ident = component.getIdentifier();
             if (ident == identifier){
-                return component.getPollData();
+                return 0;
+                //return component.getPollData();
             }
         }
         throw new java.lang.Error("These aren't the components you're looking for.");

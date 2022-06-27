@@ -1,5 +1,4 @@
 package actr.tasks.driving;
-import actr.env.Condition;
 import actr.env.Frame;
 
 import java.awt.BorderLayout;
@@ -84,15 +83,12 @@ public class Driving extends actr.task.Task {
 		construction = new JLabel("Cons");
 	}
 
-	public void start(boolean con, int n, boolean practice, int trialNum) {
-		this.con = con;
-		this.nBack = n;
-		this.practice = practice;
-		this.trialNum = trialNum;
-		endTime += practice ? 90 : 20*n;
+	public void start(int nback, boolean drivingDiff) {
+
+		endTime += 20*nback; // TODO: This needs to include the build up phase (probably - i didnt check)
 
 		System.out.println("Endtime is: " + endTime);
-		simulation = new Simulation(getModel(), con);
+		simulation = new Simulation(getModel(), drivingDiff);
 		setLayout(new BorderLayout());
 		simulator = new Simulator();
 		add(simulator, BorderLayout.CENTER);

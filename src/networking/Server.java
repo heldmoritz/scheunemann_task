@@ -9,7 +9,7 @@ import java.net.*;
  * @author Gilles Lijnzaad
  */
 public class Server {
-    private final int PORT = 9000;
+    private final int PORT = 9999;
     private boolean running = false;
     private ServerSocket server;
     private Socket client;

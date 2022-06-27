@@ -34,7 +34,7 @@ public class Model {
 	private Vector<ParseError> errors;
 	public Frame frame;
 	boolean construction;
-	int nBack;
+	int nback;
 
 	boolean realTime = false;
 	double realTimeMultiplier = 1;
@@ -405,13 +405,14 @@ public class Model {
 	 * @param reset <tt>true</tt> to start the model from time zero, or
 	 *              <tt>false</tt> to resume from the current state
 	 */
-	public void run(boolean con, int n, boolean practice, int trialNum) {
-		this.construction = con;
-		this.nBack = n;
+	public void run(int nback, boolean drivingDiff) {
+		this.construction = drivingDiff;
+		this.nback = nback;
 		stop = false;
 		taskUpdated = false;
 		ServerMain.participant.startRecording();
-		task.start(con, n, practice, trialNum);
+		// This is not referreing to Task.java but The driving task --> Driving.java
+		task.start(nback, drivingDiff);
 		while (!stop && (events.hasMoreEvents() || runUntilStop)) {
 			Event event = events.next();
 
@@ -424,7 +425,7 @@ public class Model {
 				event.action();
 			}
 		}
-		ServerMain.participant.stopRecording();
+		//ServerMain.participant.stopRecording();
 	}
 
 	void incrementalSleep(long ms) {
@@ -450,7 +451,7 @@ public class Model {
 	 * Resumes the simulation of the model (equivalent to <tt>run(false)</tt>).
 	 */
 	public void resume() {
-		run(false, 0, false, 0);
+		run(0, false);
 	}
 
 	/**

@@ -64,10 +64,11 @@ public class Frame extends JFrame {
 		this.core = core;
 
 		this.trials = new Trials();
+		this.trials.generateTrials();
 		System.out.println("Trials:");
-		for(int i = 0; i < trials.getList().size(); i++)
+		for(int i = 0; i < trials.getDriving().size(); i++)
 		{
-			System.out.println("N-back level: " + trials.getList().get(i).nBack + "      Construction site: " + trials.getList().get(i).construction);
+			System.out.println("N-back level: " + trials.getNback().get(i) + "      Construction site: " + trials.getDriving().get(i));
 		}
 
 		actions = new Actions(core, this);
@@ -343,7 +344,7 @@ public class Frame extends JFrame {
 	 * @param reset flag indicating whether or not to recompile the model before
 	 *              running
 	 */
-	public void run(final boolean reset) {
+	public void runDeprecated(final boolean reset) {
 		if (isBatchFile()) {
 			runBatch(true);
 			return;
@@ -371,7 +372,7 @@ public class Frame extends JFrame {
 					showTask(model.getTask());
 					if (!speedup.equals(""))
 						model.setParameter(":real-time", speedup);
-					model.run(reset, 0, false, 0);
+					model.run(0, false);
 					hideTask();
 				}
 				core.releaseLock(frame);
@@ -391,8 +392,36 @@ public class Frame extends JFrame {
 	/**
 	 * @MdM edited: the runAnalysis method is now used to run multiple simulations in a row.
 	 */
-	public void runAnalysis() {
-		final String modelText = editor.getText();
+
+	public void runPractice(){
+// Perform 1 practice trial, 2-back task, only 5 speed-signs.
+		String modelText = editor.getText();
+		String titleMessage = "Practice trial";
+		String contentMessage = "In this practice trial, you will perform a 2-back task.";
+
+		new NDialog(frame, contentMessage, titleMessage, new Dimension(200, 100));
+		model = Model.compile(modelText, frame);
+		showTask(model.getTask());
+		model.setParameter(":real-time", "1");
+		model.run(2, false);
+		model.getTask().finish();
+	}
+
+	public void runTrial(int nback, boolean drivingDiff){
+
+		String modelText = editor.getText();
+		model = Model.compile(modelText, frame);
+		showTask(model.getTask());
+		model.setParameter(":real-time", "1");
+		ServerMain.participant.startTrial();
+		System.out.println("This is being executed");
+		model.run(nback, drivingDiff);
+		ServerMain.participant.endTrial();
+		model.getTask().finish();
+	}
+
+	public void run(final boolean reset) {
+		String modelText = editor.getText();
 		model = Model.compile(modelText, frame);
 		if (model == null)
 			return;
@@ -407,47 +436,34 @@ public class Frame extends JFrame {
 				update();
 				clearOutput();
 				if (model != null && model.getTask() != null) {
-					// Perform 1 practice trial, 2-back task, only 5 speed-signs.
 					
-					String title_message = "Practice trial";
-					String content_message = "In this practice trial, you will perform a 2-back task.";
-					/*
-					 new NDialog(frame, content_message, title_message, new Dimension(200, 100));
-					model = Model.compile(modelText, frame);
-					showTask(model.getTask());
-					model.setParameter(":real-time", "10");
-					model.run(false, 2, true, -1);
-					model.getTask().finish();
-					*/
+					
 					// This loop runs 10 recorded iterations of the driving-simulation.
-					for (int i = 0; !stop && i < trials.getList().size(); i++) {
+					for (int i = 0; !stop && i < trials.getNback().size(); i++) {
 						if(i == 10)
 						{
-							title_message = "Break";
-							content_message = "This is the halfway point of the experiment, you can now take a break.";
-							new NDialog(frame, content_message, title_message, new Dimension(200, 100));
-							ServerMain.participant.doDriftCorrection();
+							String titleMessage = "Break";
+							String contentMessage = "This is the halfway point of the experiment, you can now take a break.";
+							new NDialog(frame, contentMessage, titleMessage, new Dimension(200, 100));
 						}
-						boolean construction = trials.getList().get(i).construction;
-						int nBack = trials.getList().get(i).nBack;
-						ServerMain.participant.prepareTrial(i, construction, nBack);
-						title_message = "Trial " + (i+1) + " - Progress: " + Math.round((i) * 100.0 / trials.getList().size()) + "% / 100%";
-						content_message = "In the next trial, you will perform a " + nBack + "-back task.";
-						new NDialog(frame, content_message, title_message, new Dimension(200, 100));
-						model = Model.compile(modelText, frame);
-						showTask(model.getTask());
-						model.setParameter(":real-time", "1");
-						ServerMain.participant.startTrial();
-						model.run(construction, nBack, false, i);
-						ServerMain.participant.endTrial();
-						model.getTask().finish();
+
+						boolean drivingDiff = trials.getDriving().get(i);
+						int nback = trials.getNback().get(i);
+						ServerMain.participant.prepareTrial(i, drivingDiff, nback);
+
+						ServerMain.participant.doDriftCorrection();
+						String titleMessage = "Trial " + (i+1) + " - Progress: " + Math.round((i) * 100.0 / trials.getDriving().size()) + "% / 100%";
+						String contentMessage = "In the next trial, you will perform a " + nback + "-back task.";
+						new NDialog(frame, contentMessage, titleMessage, new Dimension(200, 100));
+
+						runTrial(nback, drivingDiff);
 					}
 					// model = null;
 					ServerMain.participant.endExperiment();
 					hideTask();
-					title_message = "End";
-					content_message = "This is the end of the experiment, thanks for participating!";
-					new NDialog(frame, content_message, title_message, new Dimension(200, 100));
+					String titleMessage = "End";
+					String contentMessage = "This is the end of the experiment, thanks for participating!";
+					new NDialog(frame, contentMessage, titleMessage, new Dimension(200, 100));
 				}
 				core.releaseLock(frame);
 				update();
@@ -504,7 +520,7 @@ public class Frame extends JFrame {
 								showTask(model.getTask());
 								model.setParameter(":real-time", "nil");
 								model.setParameter(":v", "nil");
-								model.run(true, 0, false, 0);
+								model.run(0, true);
 								model.getTask().finish();
 								tasks[i] = model.getTask();
 							}
